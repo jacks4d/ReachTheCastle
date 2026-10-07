@@ -27,20 +27,19 @@ public class Main {
         String rightBlock = " |";
         String wall = " + —— + —— + —— + —— + —— + ";
 
-        String[] board = new String[sizeBoard * sizeBoard]; // игровое поле сделанное массивом
+        String[][] board = new String[sizeBoard][sizeBoard]; // игровое поле сделанное массивом
 
 
         // Запись пустых строк в каждую клетку игрового поля
 
         for (int y = 1; y <= sizeBoard; y++) {
             for (int x = 1; x <= sizeBoard; x++) {
-                board[(y - 1) * sizeBoard + x - 1] = "  ";
-
+                board[y - 1][x - 1] = "  ";
             }
         }
         // 1 раз записываем, то где находятся замок и игрок в начале игры на поле
-        board[(castleY - 1) * sizeBoard + castleX - 1] = castle;
-        board[(personCords[1] - 1) * sizeBoard + personCords[0] - 1] = person;
+        board[castleY - 1][castleX - 1] = castle;
+        board[personCords[1] - 1][personCords[0] - 1] = person;
 
 
 
@@ -110,12 +109,12 @@ public class Main {
     }
 
 
-    public static boolean moveTry(int[] personCords, int x, int y, String[] board, int sizeBoard, int step, String castle, String person){
+    public static boolean moveTry(int[] personCords, int x, int y, String[][] board, int sizeBoard, int step, String castle, String person){
         boolean isWin;
 
-            if (board[(y - 1) * sizeBoard + x - 1].equals("  ")) { // Если место попытки хода пустое
-                board[(personCords[1] - 1) * sizeBoard + personCords[0] - 1] = "  "; // убираем игрока с прошлого места
-                board[(y - 1) * sizeBoard + x - 1] = person; // добавляем в новое
+            if (board[y - 1][x - 1].equals("  ")) { // Если место попытки хода пустое
+                board[personCords[1] - 1][personCords[0] - 1] = "  "; // убираем игрока с прошлого места
+                board[y - 1][x - 1] = person; // добавляем в новое
 
                 personCords[0] = x;
                 personCords[1] = y;
@@ -127,7 +126,7 @@ public class Main {
                                         + "\nХод номер: " + step
                 );
                 isWin = false;
-            } else if (board[(y - 1) * sizeBoard + x - 1].equals(castle)) {
+            } else if (board[y - 1][x - 1].equals(castle)) {
                 System.out.println("Вы прошли игру!");
                 isWin = true;
             } else {
@@ -138,12 +137,12 @@ public class Main {
             return isWin;
 
     }
-    public static void drawBoard(int sizeBoard, String wall, String leftBlock, String rightBlock, String[] board){
+    public static void drawBoard(int sizeBoard, String wall, String leftBlock, String rightBlock, String[][] board){
         for (int y = 1; y <= sizeBoard; y++) {
             System.out.println(wall); // перед каждой строкой клеток (где могут быть игрок, монстр и т.д.) выводим стену горизонтальную
             for (int x = 1; x <= sizeBoard; x++) {
                 System.out.print(leftBlock); // выводим сначала левую стену
-                System.out.print(board[(y - 1) * sizeBoard + x - 1]); // выводим то что находится в клетке по индексу массива
+                System.out.print(board[y - 1][x - 1]); // выводим то что находится в клетке по индексу массива
             }
             System.out.println(rightBlock); // и закрываем правой стеной
         }
