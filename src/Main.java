@@ -16,11 +16,13 @@ public class Main {
         int castleX = 1 + random.nextInt(sizeBoard); // Рандомчик зависящий от максимума самого игрового поля
         int castleY = 1; // находится сверху
 
+        int countMonster = sizeBoard * sizeBoard - sizeBoard - 1;
+
         int[] returningCoords;
 
         // Пока что строчные записи, сохранил на потом
-        String person = "Г ";
-        String monster = "Мм";
+        String person = "\uD83E\uDDB8 "; // почему оно карточка? 🪪
+        String monster = "\uD83D\uDC80";
 
         String castle = "\uD83C\uDFF0"; // Это эмодзи если что
         String leftBlock = " | ";
@@ -36,6 +38,10 @@ public class Main {
             for (int x = 1; x <= sizeBoard; x++) {
                 board[y - 1][x - 1] = "  ";
             }
+        }
+        // запис монстров в рандомные клетки поля
+        for (int i = 0; i < countMonster; i++) {
+            board[random.nextInt(sizeBoard - 1)][random.nextInt(sizeBoard)] = monster;
         }
         // 1 раз записываем, то где находятся замок и игрок в начале игры на поле
         board[castleY - 1][castleX - 1] = castle;
