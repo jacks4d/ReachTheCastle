@@ -13,16 +13,16 @@ public class Main {
 
         System.out.println("Привет! Ты готов начать играть в игру? (Напиши: ДА или НЕТ)");
 
-        System.out.println("Ваш ответ:\t" + scanner.nextLine());
+        String isReady = scanner.nextLine();
+        System.out.println("Ваш ответ:\t" + isReady);
 
         System.out.println("Выбери сложность игры (от 1 до 5):");
 
-        int difficultGame = scanner.nextInt();
-        scanner.nextLine(); // после nextInt() там остается нажатие энтер что летит дальше, вхолостую убираем его
-        System.out.println("Выбранная сложность:\t" + difficultGame);
+        int difficulty = scanner.nextInt();
+        System.out.println("Выбранная сложность:\t" + difficulty);
 
         System.out.println("Включить кастомизацию? ДА/НЕТ");
-        String answer = scanner.nextLine();
+        String answer = "НЕТ"; //scanner.nextLine(); как оно вообще останавливается???
         final boolean isCustom = answer.equals("ДА");
 
         final int[] sizeBoard = setSizeBoard(scanner, isCustom);
@@ -31,16 +31,7 @@ public class Main {
 
         Person person = new Person(random.nextInt(sizeBoard[0]), sizeBoard[1]);
         Castle castle = new Castle(random.nextInt(sizeBoard[0]), 1);
-        Game game = new Game(sizeBoard[0], sizeBoard[1], person, castle);
-
-
-
-//        int countMonster = sizeBoard * sizeBoard - sizeBoard - 1;
-
-
-
-
-
+        Game game = new Game(sizeBoard[0], sizeBoard[1], difficulty, random, person, castle);
 
 
         // Начало игры
@@ -90,20 +81,4 @@ public class Main {
     }
 
 
-    static boolean taskMonster() {
-        Random random = new Random();
-        int a = random.nextInt(100);
-        int b = random.nextInt(100);
-        int trueAnswer = a + b;
-        System.out.println("Реши пример: " + a + " + " + b + " = ?");
-        Scanner scanner = new Scanner(System.in);
-        int ans = scanner.nextInt();
-        if (trueAnswer == ans) {
-            System.out.println("Верно! Ты победил монстра");
-            return true;
-        } else {
-            System.out.println("Ты проиграл эту битву!");
-            return false;
-        }
-    }
 }

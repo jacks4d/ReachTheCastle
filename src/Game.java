@@ -6,8 +6,10 @@ public class Game {
     private final int sizeBoardY;
     private String[][] board;
     private boolean isWin = false;
+    int countMonster;
+    private MonsterSmall[] monsters;
 
-    public Game(int sizeBoardX, int sizeBoardY, Person person, Castle castle){
+    public Game(int sizeBoardX, int sizeBoardY, int difficulty, Random random, Person person, Castle castle){
         this.sizeBoardX = sizeBoardX;
         this.sizeBoardY = sizeBoardY;
 
@@ -17,9 +19,21 @@ public class Game {
                 this.board[y][x] = "  ";
             }
         }
-//        for (int i = 0; i < countMonster; i++) {
-//            this.board[random.nextInt(sizeBoard - 1)][random.nextInt(sizeBoard)] = monster;
-//        }
+        this.countMonster = this.sizeBoardX * this.sizeBoardY * difficulty;
+        this.monsters = new MonsterSmall[sizeBoardX * sizeBoardY * difficulty];
+
+        for (int i = 0; i < countMonster; i++) {
+            int x = random.nextInt(sizeBoardX - 1);
+            int y = random.nextInt(sizeBoardY - 1);
+            if (this.board[y][x] == "  "){
+                this.monsters[i] = new MonsterSmall(random.nextInt(this.sizeBoardX), random.nextInt(this.sizeBoardY), i);
+                this.board[random.nextInt(sizeBoardY)][random.nextInt(sizeBoardX)] = this.monsters[i].getImage();
+            } else {
+                i--;
+            }
+
+
+        }
         this.board[castle.getY() - 1][castle.getX() - 1] = castle.getImage();
         this.board[person.getY() - 1][person.getX() - 1] = person.getImage();
 
@@ -53,9 +67,6 @@ public class Game {
 
         if ((Math.abs(x - person.getX()) == 1 && x > 0 ) || (Math.abs(y - person.getY()) == 1) && y > 0) { // если сдвинулся ТОЛЬКО на 1 в любую сторону
             moveTry(x, y, person, castle);
-        } else if (x == person.getX() && y == person.getY()) { // "если то же самое"
-            System.out.println("То же место");
-            System.out.println("Попробуйте еще раз");
         } else { // вписали что-то не связанное
             System.out.println("Координаты не изменены");
             System.out.println("Попробуйте еще раз");
@@ -84,6 +95,7 @@ public class Game {
             isWin = true;
         } else {
             System.out.println("Решите задачу.");
+
             isWin = false;
 
         }
