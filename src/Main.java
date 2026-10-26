@@ -1,15 +1,13 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
-// В этом коде я использовал функции,
-//из-за которых были небольшие проблемы с глобальностью/локальностью переменных,
-//поэтому тут небольшой бардак с передачей информации между функциями
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in); //Сканер это объект, нужен только один
-        Random random = new Random(); // Рандом это объект, (он как сканер) нужен только один
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
 
         System.out.println("Привет! Ты готов начать играть в игру? (Напиши: ДА или НЕТ)");
 
@@ -19,19 +17,50 @@ public class Main {
         System.out.println("Выбери сложность игры (от 1 до 5):");
 
         int difficulty = scanner.nextInt();
+        scanner.nextLine(); // Забираем перевод строки после числа
+
         System.out.println("Выбранная сложность:\t" + difficulty);
 
         System.out.println("Включить кастомизацию? ДА/НЕТ");
-        String answer = "НЕТ"; //scanner.nextLine(); как оно вообще останавливается???
-        final boolean isCustom = answer.equals("ДА");
 
-        final int[] sizeBoard = setSizeBoard(scanner, isCustom);
+        String answer = scanner.nextLine();
+        final boolean isCustom = answer.trim().equalsIgnoreCase("ДА");
+
+        final int[] sizeBoard = setSizeBoard(scanner, isCustom, difficulty);
+
+        Map<String, String> icons = new HashMap<>();
+        icons.put("monsterSmall", "\uD83D\uDE08");
+        icons.put("monsterBig", "\uD83D\uDC7A");
+        icons.put("castle", "\uD83C\uDFF0");
+        icons.put("player", "\uD83E\uDDB8");
+        icons.put("heartSmall", "\u2665\uFE0F");
+        icons.put("heartBig", "\u2764\uFE0F\u200D\uD83D\uDD25");
+
+        if (isCustom) {
+            setIcons(scanner, icons);
+        }
 
 
+        Person person = new Person(
+                random.nextInt(sizeBoard[0]) + 1,
+                sizeBoard[1],
+                3,
+                icons.get("player")
+        );
+        Castle castle = new Castle(
+                random.nextInt(sizeBoard[0]) + 1,
+                1,
+                icons.get("castle")
+        );
 
-        Person person = new Person(random.nextInt(sizeBoard[0]), sizeBoard[1]);
-        Castle castle = new Castle(random.nextInt(sizeBoard[0]), 1);
-        Game game = new Game(sizeBoard[0], sizeBoard[1], difficulty, random, person, castle);
+        Game game = new Game(
+                sizeBoard[0],
+                sizeBoard[1],
+                difficulty,
+                random,
+                person,
+                castle,
+                icons);
 
 
         // Начало игры
@@ -39,14 +68,14 @@ public class Main {
 
         // Бесконечный цикл игры
 
-        while ((person.getLives() > 0) && !(castle.getX() == person.getX() && castle.getY() == person.getY())){ // бесконечное повторение игры (то есть шаги будут идти)
+        while ((person.getLives() > 0) && !(castle.getX() == person.getX() && castle.getY() == person.getY())) { // бесконечное повторение игры (то есть шаги будут идти)
 
             // Отрисовка игрового поля
             game.drawBoard();
             // Запуск и запись попытки хода
-            game.moveCheck(scanner, person, castle);
+            game.moveCheck(scanner, random, person, castle, difficulty);
 
-            if (game.getIsWin()){
+            if (game.getIsWin()) {
                 break;
             }
 
@@ -60,25 +89,47 @@ public class Main {
         }
 
     }
-    public static int[] setSizeBoard(Scanner scanner, boolean isCustom){
-        if (isCustom){
+
+    public static void setIcons(Scanner scanner, Map<String, String> icons) {
+        System.out.println("Настроить иконки? (ДА/НЕТ)");
+        String answer = scanner.nextLine();
+        if (answer.trim().equalsIgnoreCase("ДА")) {
+            System.out.println("Иконку рекомендуется записывать в 1 символ");
+
+            System.out.println("Введите иконку маленького монстра:");
+            answer = scanner.nextLine();
+            icons.put("monsterSmall", answer);
+
+            System.out.println("Введите иконку большого монстра:");
+            answer = scanner.nextLine();
+            icons.put("monsterBig", answer);
+
+            System.out.println("Введите иконку замка:");
+            answer = scanner.nextLine();
+            icons.put("castle", answer);
+
+            System.out.println("Введите иконку игрока:");
+            answer = scanner.nextLine();
+            icons.put("player", answer);
+        }
+    }
+
+    public static int[] setSizeBoard(Scanner scanner, boolean isCustom, int difficulty) {
+        if (isCustom) {
             System.out.println("Напишите длину и ширину доски\n" +
                     "К примеру:\n" +
                     "5 6 -- (x = 5, y = 6)\n" +
                     "2 -- (x = 2, y = 2");
             String answer = scanner.nextLine();
-            if (answer.contains(" ")){
+            if (answer.contains(" ")) {
                 String[] parts = answer.split(" ");
                 return new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
-            }
-            else {
+            } else {
                 return new int[]{Integer.parseInt(answer), Integer.parseInt(answer)};
             }
         } else {
-            return new int[]{5, 5}; // пока что так, ПОТОМ СДЕЛАТЬ НАДО СОВМЕСТИМОСТЬ СО СЛОЖНОСТЬЮ
+            return new int[]{5 * difficulty, 5 * difficulty};
         }
 
     }
-
-
 }
