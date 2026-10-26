@@ -18,15 +18,15 @@ public class Person {
         this.y = y;
     }
 
-    public void decHealth() {
-        this.lives--;
+    public void decHealth(int points) {
+        this.lives -= points;
         System.out.println("Жизней:" + this.lives);
 
     }
 
     public void incHealth(int points) {
         if (this.lives < this.maxLives) { // если нынешнее здоровье меньше максимального
-            this.lives++;
+            this.lives += points;
             System.out.println("Жизней:" + this.lives);
         } else {
             System.out.println("Жизни не увеличились, достигнут максимум.\n" +

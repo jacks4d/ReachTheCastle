@@ -2,8 +2,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MonsterBig extends Monster {
-    private int x, y;
-    private String image;
 
     public MonsterBig(int x, int y, String image) {
         super(x, y, image);

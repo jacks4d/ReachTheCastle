@@ -2,7 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Monster {
-    private int x, y;
+    private final int x, y;
     private final String image;
 
     public Monster(int x, int y, String image) {
