@@ -163,8 +163,7 @@ public class Game {
             System.out.println("Вы прошли игру!");
             isWin = true;
 
-        } else if (this.board[y - 1][x - 1].equals(this.icons.get("monsterSmall")) ||
-                this.board[y - 1][x - 1].equals(this.icons.get("monsterBig"))) {
+        } else if (this.board[y - 1][x - 1].equals(this.icons.get("monsterSmall"))) {
             System.out.println("Решите задачу.");
             for (Monster monster : monsters) {
                 if (monster.getX() == x && monster.getY() == y) {
@@ -174,28 +173,44 @@ public class Game {
                         person.move(x, y);
                         this.step++;
                     } else {
-                        person.decHealth();
+                        person.decHealth(1);
                     }
                     break;
                 }
             }
 
-        } else if (this.board[y - 1][x - 1].equals(this.icons.get("heartSmall"))) {
-            this.board[person.getY() - 1][person.getX() - 1] = "  ";
-            this.board[y - 1][x - 1] = person.getImage(); // добавляем в новое
-            person.incHealth(1);
-        } else if (this.board[y - 1][x - 1].equals(this.icons.get("heartBig"))) {
-            this.board[person.getY() - 1][person.getX() - 1] = "  ";
-            this.board[y - 1][x - 1] = person.getImage(); // добавляем в новое
-            person.incHealth(2);
+        }else if (this.board[y - 1][x - 1].equals(this.icons.get("monsterBig"))) {
+            System.out.println("Решите задачу.");
+            for (Monster monster : monsters) {
+                if (monster.getX() == x && monster.getY() == y) {
+                    if (monster.taskMonster(random, scanner, difficulty)) {
+                        this.board[person.getY() - 1][person.getX() - 1] = "  ";
+                        this.board[y - 1][x - 1] = person.getImage();
+                        person.move(x, y);
+                        this.step++;
+                    } else {
+                        person.decHealth(2);
+                    }
+                    break;
+                }
+            }
+
+            } else if (this.board[y - 1][x - 1].equals(this.icons.get("heartSmall"))) {
+                this.board[person.getY() - 1][person.getX() - 1] = "  ";
+                this.board[y - 1][x - 1] = person.getImage(); // добавляем в новое
+                person.incHealth(1);
+            } else if (this.board[y - 1][x - 1].equals(this.icons.get("heartBig"))) {
+                this.board[person.getY() - 1][person.getX() - 1] = "  ";
+                this.board[y - 1][x - 1] = person.getImage(); // добавляем в новое
+                person.incHealth(2);
+            }
+
+            this.isWin = isWin;
+
         }
 
-        this.isWin = isWin;
+        public boolean getIsWin () {
+            return this.isWin;
+        }
 
     }
-
-    public boolean getIsWin() {
-        return this.isWin;
-    }
-
-}
